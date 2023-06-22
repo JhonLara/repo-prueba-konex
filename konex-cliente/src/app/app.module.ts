@@ -1,60 +1,34 @@
-import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { HttpModule } from "@angular/http";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
-import {
-  ReactiveFormsModule,
-  FormsModule
-} from "@angular/forms";
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from "./app-routing.module";
-import { AppComponent } from "./app.component";
-import { UrgenciasComponent } from "./feature/urgencias/urgencias.component";
-import { CrearUrgenciasComponent } from "./feature/crear-urgencias/crear-urgencias.component";
-import { esLocale } from "ngx-bootstrap/locale";
-import { defineLocale } from "ngx-bootstrap/chronos";
-import es from "@angular/common/locales/es";
-import { registerLocaleData } from "@angular/common";
-import { LOCALE_ID } from "@angular/core";
-import { MostrarFacturaComponent } from './feature/mostrar-factura/mostrar-factura.component';
-defineLocale("es", esLocale);
-registerLocaleData(es);
+import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { FormsModule } from '@angular/forms';
+
+import { MatTableModule} from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
+import { MatPaginatorModule } from '@angular/material/paginator';
+
 
 @NgModule({
   declarations: [
-    AppComponent,
-    UrgenciasComponent,
-    CrearUrgenciasComponent,
-    MostrarFacturaComponent
+    AppComponent
   ],
   imports: [
+    HttpModule, 
     BrowserModule,
-    HttpModule,
-    HttpClientModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    })
+    BrowserAnimationsModule, 
+    FormsModule, 
+    MatTableModule, 
+    MatInputModule, 
+    MatButtonModule ,
+    MatPaginatorModule 
   ],
-  providers: [
-    {
-      provide: LOCALE_ID,
-      useValue: "es-ES"
-    }
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-
-// required for AOT compilation
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
-}

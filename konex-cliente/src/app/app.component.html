@@ -1,1 +1,157 @@
-<router-outlet></router-outlet>
+<h2>Prueba Konex</h2>
+
+
+<div class="card-container">
+  <h3>Medicamentos</h3>
+<mat-form-field>
+  <mat-label>Buscar</mat-label>
+  <input type="text" matInput (keyup)="filtrar($event)" placeholder="Buscar...">
+</mat-form-field>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" #tablaMedicamentos>
+  <ng-container matColumnDef="nombreMedicamento">
+    <th mat-header-cell *matHeaderCellDef>Nombre</th>
+    <td mat-cell *matCellDef="let medicamento">{{medicamento.nombreMedicamento}}</td>
+  </ng-container>
+  <ng-container matColumnDef="laboratorio">
+    <th mat-header-cell *matHeaderCellDef>Laboratorio</th>
+    <td mat-cell *matCellDef="let medicamento">{{medicamento.laboratorio}}</td>
+  </ng-container>
+  <ng-container matColumnDef="fechaFabricacion">
+    <th mat-header-cell *matHeaderCellDef>Fecha Fabricación</th>
+    <td mat-cell *matCellDef="let medicamento">{{medicamento.fechaFabricacion}}</td>
+  </ng-container>
+  <ng-container matColumnDef="fechaVencimiento">
+    <th mat-header-cell *matHeaderCellDef>Fecha Vencimiento</th>
+    <td mat-cell *matCellDef="let medicamento">{{medicamento.fechaVencimiento}}</td>
+  </ng-container>
+  <ng-container matColumnDef="cantidad">
+    <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+    <td mat-cell *matCellDef="let medicamento">{{medicamento.cantidad}}</td>
+  </ng-container>
+  <ng-container matColumnDef="valor">
+    <th mat-header-cell *matHeaderCellDef>Valor</th>
+    <td mat-cell *matCellDef="let medicamento">{{medicamento.valor}}</td>
+  </ng-container>
+  <ng-container matColumnDef="eliminar">
+    <th mat-header-cell *matHeaderCellDef>Eliminar</th>
+    <td mat-cell *matCellDef="let medicamento">
+      <button mat-raised-button color="warn" focusable="false" (click)="eliminarMedicamento(medicamento.idMedicamento)">Eliminar</button>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="editar">
+    <th mat-header-cell *matHeaderCellDef>Editar</th>
+    <td mat-cell *matCellDef="let medicamento">
+      <button mat-raised-button color="alert" focusable="false" (click)="editarMedicamento(medicamento)">Editar</button>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="vender">
+    <th mat-header-cell *matHeaderCellDef>Vender</th>
+    <td mat-cell *matCellDef="let medicamento">
+      <button mat-raised-button color="primary" focusable="false" (click)="venderMedicamento(medicamento.nombreMedicamento, medicamento.valor)">Vender</button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[5, 10, 15,20,25]" showFirstLastButtons></mat-paginator>
+</div>
+
+<div class="contenedor" *ngIf="formEditar">
+  <mat-form-field>
+    <input type="text" matInput [(ngModel)]="medicamentoEditar.nombreMedicamento" placeholder="Ingrese el nombre del medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="text" matInput [(ngModel)]="medicamentoEditar.laboratorio" placeholder="Ingrese el laboratorio del medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="date" matInput [(ngModel)]="medicamentoEditar.fechaFabricacion" placeholder="Ingrese la fecha de fabricación del medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="date" matInput [(ngModel)]="medicamentoEditar.fechaVencimiento" placeholder="Ingrese la fecha de vencimiento del medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="number" matInput [(ngModel)]="medicamentoEditar.cantidad" placeholder="Ingrese la cantidad del medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="number" matInput [(ngModel)]="medicamentoEditar.valor" placeholder="Ingrese el valor del medicamento">
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="realizarEdicionMedicamento()">Editar</button>
+  <button mat-raised-button color="warn" (click)="cerrarEditar()">Cerrar</button>
+</div>
+
+
+<div class="contenedor" *ngIf="formVenta">
+  <mat-form-field>
+    <input type="text" matInput [(ngModel)]="nuevaVenta.nombreMedicamento" placeholder="Ingrese el nombre del medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="number" matInput [(ngModel)]="nuevaVenta.cantidad" placeholder="Ingrese la cantidad del medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="number" matInput [(ngModel)]="nuevaVenta.valor" placeholder="Valor unidad de medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="number" matInput [(ngModel)]="nuevaVenta.valor*nuevaVenta.cantidad" placeholder="ValorTotal">
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="agregarVenta()">Finalizar venta</button>
+  <button mat-raised-button color="warn" (click)="cerrarVenta()">Cerrar</button>
+
+</div>
+
+<div class="card-container">
+  <h3>Ventas</h3>
+<table mat-table [dataSource]="datosVentas" class="mat-elevation-z8" #tablaMedicamentos>
+  <ng-container matColumnDef="nombreMedicamento">
+    <th mat-header-cell *matHeaderCellDef>Nombre</th>
+    <td mat-cell *matCellDef="let venta">{{venta.nombreMedicamento}}</td>
+  </ng-container>
+  <ng-container matColumnDef="fecha">
+    <th mat-header-cell *matHeaderCellDef>Fecha</th>
+    <td mat-cell *matCellDef="let venta">{{venta.fecha}}</td>
+  </ng-container>
+  <ng-container matColumnDef="cantidad">
+    <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+    <td mat-cell *matCellDef="let venta">{{venta.cantidad}}</td>
+  </ng-container>
+  <ng-container matColumnDef="valor">
+    <th mat-header-cell *matHeaderCellDef>Valor</th>
+    <td mat-cell *matCellDef="let venta">{{venta.valor}}</td>
+  </ng-container>
+  <ng-container matColumnDef="valorTotal">
+    <th mat-header-cell *matHeaderCellDef>Valor Total</th>
+    <td mat-cell *matCellDef="let venta">{{venta.valorTotal}}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnasVentas"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnasVentas"></tr>
+</table>
+</div>
+
+<br>
+<div class="contenedor" *ngIf="false">
+  <mat-form-field>
+    <input type="text" matInput [(ngModel)]="medicamentoNuevo.nombreMedicamento" placeholder="Ingrese el nombre del medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="text" matInput [(ngModel)]="medicamentoNuevo.laboratorio" placeholder="Ingrese el laboratorio del medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="date" matInput [(ngModel)]="medicamentoNuevo.fechaFabricacion" placeholder="Ingrese la fecha de fabricación del medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="date" matInput [(ngModel)]="medicamentoNuevo.fechaVencimiento" placeholder="Ingrese la fecha de vencimiento del medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="number" matInput [(ngModel)]="medicamentoNuevo.cantidad" placeholder="Ingrese la cantidad del medicamento">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="number" matInput [(ngModel)]="medicamentoNuevo.valor" placeholder="Ingrese el valor del medicamento">
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="agregarMedicamento()">Agregar</button>
+</div>
+
+
