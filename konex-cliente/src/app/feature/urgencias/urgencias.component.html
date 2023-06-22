@@ -1,0 +1,53 @@
+<div class="spacer20"></div>
+<div class="container">
+  <div class="page-header">
+    <div class="row">
+      <div class="col-md-10"><h1>{{"forms.available_urgencias" | translate}}</h1></div>
+      <div class="col-md-2">
+        <button id="crearUrgencia" class="btn btn-primary pull-right" routerLink="/urgencia-form">
+          {{"forms.new" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <table mat-table [dataSource]="urgencias" class="mat-elevation-z8" #tablaArticulos>
+    <ng-container matColumnDef="codigo">
+      <th mat-header-cell *matHeaderCellDef>Código</th>
+      <td mat-cell *matCellDef="let articulo">{{articulo.codigo}}</td>
+    </ng-container>
+    <ng-container matColumnDef="descripcion">
+      <th mat-header-cell *matHeaderCellDef>Descipción</th>
+      <td mat-cell *matCellDef="let articulo">{{articulo.descripcion}}</td>
+    </ng-container>
+    <ng-container matColumnDef="precio">
+      <th mat-header-cell *matHeaderCellDef>Precio</th>
+      <td mat-cell *matCellDef="let articulo">{{articulo.precio}}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="borrar">
+      <th mat-header-cell *matHeaderCellDef>Borrar</th>
+      <td mat-cell *matCellDef="let j = index;">
+        <button mat-raised-button color="warn" focusable="false" (click)="borrarFila(j)">¿Borrar?</button>
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+  </table>
+  <br>
+  <div class="contenedor">
+    <mat-form-field>
+      <input type="number" matInput [(ngModel)]="articuloSeleccionado.codigo" placeholder="Ingrese el código del artículo">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="text" matInput [(ngModel)]="articuloSeleccionado.descripcion" placeholder="Ingrese la descripción del artículo">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="number" matInput [(ngModel)]="articuloSeleccionado.precio" placeholder="Ingrese el precio del artículo">
+    </mat-form-field>
+  
+    <button mat-raised-button color="primary" (click)="agregarArticulo()">Agregar</button>
+  </div>
+  
+</div>
