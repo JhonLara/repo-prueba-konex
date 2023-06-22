@@ -7,6 +7,7 @@
   <mat-label>Buscar</mat-label>
   <input type="text" matInput (keyup)="filtrar($event)" placeholder="Buscar...">
 </mat-form-field>
+<button mat-raised-button color="primary" (click)="crearMedicamento()">Agregar Medicamento</button>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" #tablaMedicamentos>
   <ng-container matColumnDef="nombreMedicamento">
     <th mat-header-cell *matHeaderCellDef>Nombre</th>
@@ -103,7 +104,13 @@
 
 <div class="card-container">
   <h3>Ventas</h3>
-<table mat-table [dataSource]="datosVentas" class="mat-elevation-z8" #tablaMedicamentos>
+  <mat-form-field>
+    <input type="date" matInput [(ngModel)]="fechaInicial" placeholder="Ingrese la fecha inicial" (change)="changeDates($event)">
+  </mat-form-field>
+  <mat-form-field>
+    <input type="date" matInput [(ngModel)]="fechaFinal" placeholder="Ingrese la fecha final" (change)="changeDates($event)">
+  </mat-form-field>
+<table mat-table [dataSource]="datosVentas" class="mat-elevation-z8" #tablaMedicamentos *ngIf="tableVentas">
   <ng-container matColumnDef="nombreMedicamento">
     <th mat-header-cell *matHeaderCellDef>Nombre</th>
     <td mat-cell *matCellDef="let venta">{{venta.nombreMedicamento}}</td>
@@ -131,7 +138,7 @@
 </div>
 
 <br>
-<div class="contenedor" *ngIf="false">
+<div class="contenedor" *ngIf="formMedicamento">
   <mat-form-field>
     <input type="text" matInput [(ngModel)]="medicamentoNuevo.nombreMedicamento" placeholder="Ingrese el nombre del medicamento">
   </mat-form-field>

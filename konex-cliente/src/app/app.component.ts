@@ -16,7 +16,6 @@ export class AppComponent implements OnInit{
 
   ngOnInit() {
     this.getMedicamentos();
-    this.getVentas();
   }
 
   columnas: string[] = ['nombreMedicamento', 'laboratorio', 'fechaFabricacion', 'fechaVencimiento', 'cantidad', 'valor', 'eliminar', 'editar', 'vender'];
@@ -33,6 +32,14 @@ export class AppComponent implements OnInit{
 
   formEditar: boolean= false;
 
+  formMedicamento: boolean= false;
+
+  tableVentas: boolean = false;
+
+  fechaInicial: any;
+
+  fechaFinal: any;
+
   medicamentoNuevo: Medicamento = new Medicamento(0, '', '', new Date, new Date, 0,0);
   medicamentoEditar: Medicamento = new Medicamento(0, '', '', new Date, new Date, 0,0);
 
@@ -42,6 +49,13 @@ export class AppComponent implements OnInit{
   @ViewChild(MatTable) tablaArticulos!: MatTable<Medicamento>;
   @ViewChild(MatPaginator, { static: true }) paginador!: MatPaginator;
 
+
+  changeDates(event: any) {
+    if(this.fechaInicial && this.fechaFinal && this.fechaFinal > this.fechaInicial){
+      this.getVentas();
+      this.tableVentas=true;
+    }
+  }
 
   eliminarMedicamento(idMedicamento: number) {
     if (confirm('¿Realmente quiere eliminar este medicamento?')) {
@@ -64,6 +78,10 @@ export class AppComponent implements OnInit{
     this.nuevaVenta.valor=valor;
   }
 
+  crearMedicamento(){
+    this.formMedicamento=true;
+  }
+
   private getMedicamentos() {
     let url = `/api/medicamentos/obtener-medicamentos`;
     this.service.queryExternalApi(url).subscribe(
@@ -84,7 +102,7 @@ export class AppComponent implements OnInit{
   }
 
   private getVentas() {
-    let url = `/api/ventas/obtener-ventas`;
+    let url = `/api/ventas/obtener-ventas/${this.fechaInicial}/${this.fechaFinal}`;
     this.service.queryExternalApi(url).subscribe(
       response => {
         let result = response.json();
@@ -115,7 +133,7 @@ export class AppComponent implements OnInit{
       .subscribe(data => {
         let result = data;
         if (result) {
-          this.getVentas();
+          this.getMedicamentos();
           this.formVenta=false
         } else {
           swal({
@@ -226,6 +244,8 @@ export class AppComponent implements OnInit{
       });
     
     this.medicamentoNuevo = new Medicamento(0,'', '', new Date, new Date, 0,0);
+    this.formMedicamento=false;
+    this.getMedicamentos();
   }
 }
 function swal(arg0: { title: any; text: any; type: string; showCancelButton: boolean; confirmButtonColor: string; cancelButtonColor: string; confirmButtonText: any; }) {
